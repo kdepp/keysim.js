@@ -161,6 +161,8 @@ export class Keyboard {
     let currentModifierState = 0;
     for (let i = 0, length = input.length; i < length; i++) {
       const keystroke = this.keystrokeForCharCode(input.charCodeAt(i));
+      if (!keystroke) continue
+
       this.dispatchModifierStateTransition(target, currentModifierState, keystroke.modifiers);
       this.dispatchEventsForKeystroke(keystroke, target, false);
       currentModifierState = keystroke.modifiers;
@@ -202,6 +204,8 @@ export class Keyboard {
    * @param {number} events
    */
   dispatchEventsForKeystroke(keystroke, target, transitionModifiers=true, events=KeyEvents.ALL) {
+    if (!keystroke) return
+
     if (transitionModifiers) {
       this.dispatchModifierStateTransition(target, 0, keystroke.modifiers, events);
     }
@@ -393,6 +397,8 @@ export class Keyboard {
       keyCode = this._actionKeyCodeMap[lastPart.toUpperCase()];
     } else if (lastPart.length === 1) {
       let lastPartKeystroke = this.keystrokeForCharCode(lastPart.charCodeAt(0));
+      if (!lastPartKeystroke) return null
+
       modifiers |= lastPartKeystroke.modifiers;
       keyCode = lastPartKeystroke.keyCode;
     } else {
@@ -486,6 +492,8 @@ const US_ENGLISH_CHARCODE_KEYCODE_MAP = {
   91:  new Keystroke(0,     219), // [
   92:  new Keystroke(0,     220), // \
   93:  new Keystroke(0,     221), // ]
+  94:  new Keystroke(0,     54),  // ^
+  95:  new Keystroke(0,     189), // _
   96:  new Keystroke(0,     192), // `
   97:  new Keystroke(0,     65),  // a
   98:  new Keystroke(0,     66),  // b
